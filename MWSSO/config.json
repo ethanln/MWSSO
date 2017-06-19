@@ -1,0 +1,14 @@
+{
+  "db_config": {
+    "username": "root@localhost",
+    "password": "",
+    "host": "ethan-laptop",
+    "port": "3306",
+    "clients": [
+      "stuff",
+      {
+        "term": "test"
+      }
+    ]
+  }
+}
