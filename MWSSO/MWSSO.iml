@@ -19,5 +19,6 @@
     <orderEntry type="library" name="jackson-annotations-2.9.0.pr3" level="project" />
     <orderEntry type="library" name="jackson-core-2.9.0.pr3" level="project" />
     <orderEntry type="library" name="slf4j-simple-1.6.1" level="project" />
+    <orderEntry type="library" name="mysql-connector-java-5.1.42-bin" level="project" />
   </component>
 </module>

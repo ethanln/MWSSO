@@ -1,0 +1,11 @@
+{
+  "db_config": {
+    "service": "test",
+    "username": "test",
+    "password": "tester",
+    "database": "testdb",
+    "domain": "test_domain",
+    "driver": "test.Driver",
+    "port": "1111"
+  }
+}

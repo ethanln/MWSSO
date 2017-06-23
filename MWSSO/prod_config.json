@@ -1,0 +1,11 @@
+{
+  "db_config": {
+    "service": "mysql",
+    "username": "root",
+    "password": "",
+    "database": "demodb",
+    "domain": "localhost",
+    "driver": "com.mysql.jdbc.Driver",
+    "port": "3306"
+  }
+}
