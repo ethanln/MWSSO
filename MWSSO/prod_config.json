@@ -2,7 +2,7 @@
   "db_config": {
     "service": "mysql",
     "username": "root",
-    "password": "",
+    "password": "#ALRM09-11",
     "database": "demodb",
     "domain": "localhost",
     "driver": "com.mysql.jdbc.Driver",

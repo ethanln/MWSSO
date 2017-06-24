@@ -1,19 +1,19 @@
 package test.util_test;
 
-import dao.Dao;
-import exception.DaoException;
+import dao.proxy.MySqlDBProxy;
+import exception.DBProxyException;
 import org.junit.Test;
 /**
  * Created by ethan on 6/23/17.
  */
-public class DaoTest {
+public class MySqlDBProxyTest {
     @Test
     public void testConnection(){
         try {
-            Dao d = new Dao();
-            d.open();
+            MySqlDBProxy d = new MySqlDBProxy();
+            //d.open();
         }
-        catch(DaoException ex){
+        catch(DBProxyException ex){
             System.out.println(ex.getMessage());
         }
     }
