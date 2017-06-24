@@ -19,12 +19,19 @@ public interface IDBProxy {
     void begin() throws DBProxyException;
 
     /**
-     * Executes a query and returns raw string data.
+     * Executes a fetch query and returns raw string data.
      * @param query
      * @return
      * @throws DBProxyException
      */
-    String executeQuery(String query) throws DBProxyException;
+    String executeFetchQuery(String query) throws DBProxyException;
+
+    /**
+     * Executes an update query to the db server.
+     * @param query
+     * @throws DBProxyException
+     */
+    void executeUpdateQuery(String query) throws DBProxyException;
 
     /**
      * Commits transaction to db server.

@@ -3,9 +3,7 @@ package dao.proxy;
 import exception.DBProxyException;
 import shared.util.ConfigurationManager;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * Created by ethan on 6/22/17.
@@ -136,8 +134,46 @@ public class MySqlDBProxy implements IDBProxy{
     }
 
     @Override
-    public String executeQuery(String query) throws DBProxyException {
-        throw new DBProxyException("");
+    public String executeFetchQuery(String query) throws DBProxyException {
+        // FINISH IMPLEMENTING.
+        if(this.isClosed()){
+            // Throw error if there is no db connection instance.
+            throw new DBProxyException("No DB connection available.");
+        }
+
+        try{
+            Statement st = this.dbConn.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            String val = "";
+            while(rs.next()){
+                val = rs.getObject("username", String.class);
+            }
+            return "";
+        }
+        catch(SQLException ex){
+            throw new DBProxyException("SQL fetching failed.");
+        }
+    }
+
+    @Override
+    public void executeUpdateQuery(String query) throws DBProxyException {
+        // TEST
+        if(!this.isTransaction){
+            // Throw error if there is current transaction available.
+            throw new DBProxyException("No transaction is currently initiated.");
+        }
+
+        if(this.isClosed()){
+            // Throw error if there is no db connection instance.
+            throw new DBProxyException("No DB connection available.");
+        }
+
+        try{
+            this.dbConn.nativeSQL(query);
+        }
+        catch(SQLException ex){
+            throw new DBProxyException("SQL update failed.");
+        }
     }
 
     @Override

@@ -9,9 +9,11 @@ import org.junit.Test;
 public class MySqlDBProxyTest {
     @Test
     public void testConnection(){
+        String result = "";
         try {
             MySqlDBProxy d = new MySqlDBProxy();
-            //d.open();
+            d.open();
+            result = d.executeFetchQuery("SELECT * FROM SSOUser");
         }
         catch(DBProxyException ex){
             System.out.println(ex.getMessage());
