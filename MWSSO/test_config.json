@@ -1,11 +1,11 @@
 {
   "db_config": {
-    "service": "test",
-    "username": "test",
-    "password": "tester",
+    "service": "mysql",
+    "username": "root",
+    "password": "#ALRM09-11",
     "database": "testdb",
-    "domain": "test_domain",
-    "driver": "test.Driver",
-    "port": "1111"
+    "domain": "localhost",
+    "driver": "com.mysql.jdbc.Driver",
+    "port": "3306"
   }
 }

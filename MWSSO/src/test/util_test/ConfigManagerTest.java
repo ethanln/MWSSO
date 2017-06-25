@@ -14,25 +14,22 @@ public class ConfigManagerTest {
         ConfigurationManager.setConfigurationType(ConfigurationManager.ConfigurationType.TESTING);
 
         String result = (String)ConfigurationManager.fetchDbConfiguration("service");
-        Assert.assertEquals(result, "test");
+        Assert.assertEquals(result, "mysql");
 
         result = (String)ConfigurationManager.fetchDbConfiguration("username");
-        Assert.assertEquals(result, "test");
-
-        result = (String)ConfigurationManager.fetchDbConfiguration("password");
-        Assert.assertEquals(result, "tester");
+        Assert.assertEquals(result, "root");
 
         result = (String)ConfigurationManager.fetchDbConfiguration("database");
         Assert.assertEquals(result, "testdb");
 
         result = (String)ConfigurationManager.fetchDbConfiguration("domain");
-        Assert.assertEquals(result, "test_domain");
+        Assert.assertEquals(result, "localhost");
 
         result = (String)ConfigurationManager.fetchDbConfiguration("driver");
-        Assert.assertEquals(result, "test.Driver");
+        Assert.assertEquals(result, "com.mysql.jdbc.Driver");
 
         result = (String)ConfigurationManager.fetchDbConfiguration("port");
-        Assert.assertEquals(result, "1111");
+        Assert.assertEquals(result, "3306");
 
         result = (String)ConfigurationManager.fetchDbConfiguration("port.whoKnows");
         Assert.assertEquals(result, null);

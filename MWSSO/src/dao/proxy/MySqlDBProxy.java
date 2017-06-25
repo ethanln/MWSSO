@@ -100,6 +100,9 @@ public class MySqlDBProxy implements IDBProxy{
     @Override
     public void open() throws DBProxyException {
         // TEST
+        if(!this.isClosed()){
+            throw new DBProxyException("Connection is already opened.");
+        }
         try {
             // Create db connection instance.
             this.dbConn = DriverManager.getConnection(this.connectionString);
@@ -116,12 +119,15 @@ public class MySqlDBProxy implements IDBProxy{
     @Override
     public void begin() throws DBProxyException {
         // TEST
-        try {
-            if (this.isClosed()) {
-                // Throw error if there is no db connection instance.
-                throw new DBProxyException("No database connection available.");
-            }
+        if(this.isTransaction){
+            throw new DBProxyException("There is already a transaction in progress.");
+        }
+        if (this.isClosed()) {
+            // Throw error if there is no db connection instance.
+            throw new DBProxyException("No database connection available.");
+        }
 
+        try {
             // Begin a transaction.
             this.dbConn.setAutoCommit(false);
             // Initiate transaction state.
@@ -186,6 +192,11 @@ public class MySqlDBProxy implements IDBProxy{
     @Override
     public void cancel() throws DBProxyException {
         // TEST
+        if(!this.isTransaction){
+            // Throw error if there is current transaction available.
+            throw new DBProxyException("No transaction is currently initiated.");
+        }
+
         if(this.isClosed()){
             // Throw error if there is no db connection instance.
             throw new DBProxyException("No DB connection available.");
@@ -223,6 +234,8 @@ public class MySqlDBProxy implements IDBProxy{
         finally{
             // Deallocate connection instance.
             this.dbConn = null;
+            // Make sure the transaction state is always false.
+            this.isTransaction = false;
         }
     }
 }
