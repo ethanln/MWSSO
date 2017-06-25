@@ -2,6 +2,8 @@ package dao.proxy;
 
 import exception.DBProxyException;
 
+import java.sql.ResultSet;
+
 /**
  * Created by ethan on 6/24/17.
  */
@@ -24,14 +26,7 @@ public interface IDBProxy {
      * @return
      * @throws DBProxyException
      */
-    String executeFetchQuery(String query) throws DBProxyException;
-
-    /**
-     * Executes an update query to the db server.
-     * @param query
-     * @throws DBProxyException
-     */
-    void executeUpdateQuery(String query) throws DBProxyException;
+    ResultSet executeQuery(String query) throws DBProxyException;
 
     /**
      * Commits transaction to db server.

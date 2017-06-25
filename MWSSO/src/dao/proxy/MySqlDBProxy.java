@@ -134,8 +134,12 @@ public class MySqlDBProxy implements IDBProxy{
     }
 
     @Override
-    public String executeFetchQuery(String query) throws DBProxyException {
-        // FINISH IMPLEMENTING.
+    public ResultSet executeQuery(String query) throws DBProxyException {
+        if(!this.isTransaction){
+            // Throw error if there is current transaction available.
+            throw new DBProxyException("No transaction is currently initiated.");
+        }
+
         if(this.isClosed()){
             // Throw error if there is no db connection instance.
             throw new DBProxyException("No DB connection available.");
@@ -143,12 +147,7 @@ public class MySqlDBProxy implements IDBProxy{
 
         try{
             Statement st = this.dbConn.createStatement();
-            ResultSet rs = st.executeQuery(query);
-            String val = "";
-            while(rs.next()){
-                val = rs.getObject("username", String.class);
-            }
-            return "";
+            return st.executeQuery(query);
         }
         catch(SQLException ex){
             throw new DBProxyException("SQL fetching failed.");
@@ -156,7 +155,7 @@ public class MySqlDBProxy implements IDBProxy{
     }
 
     @Override
-    public void executeUpdateQuery(String query) throws DBProxyException {
+    public void commit() throws DBProxyException {
         // TEST
         if(!this.isTransaction){
             // Throw error if there is current transaction available.
@@ -169,55 +168,42 @@ public class MySqlDBProxy implements IDBProxy{
         }
 
         try{
-            this.dbConn.nativeSQL(query);
-        }
-        catch(SQLException ex){
-            throw new DBProxyException("SQL update failed.");
-        }
-    }
-
-    @Override
-    public void commit() throws DBProxyException {
-        // TEST
-        try{
-            if(!this.isTransaction){
-                // Throw error if there is current transaction available.
-                throw new DBProxyException("No transaction is currently initiated.");
-            }
-
-            if(this.isClosed()){
-                // Throw error if there is no db connection instance.
-                throw new DBProxyException("No DB connection available.");
-            }
-
-            // Reset the transaction state.
-            this.isTransaction = false;
             // Commit transaction.
             this.dbConn.commit();
+            // set auto commit to true;
+            this.dbConn.setAutoCommit(true);
         }
         catch(SQLException ex){
             // Throw error if committing process fails.
             throw new DBProxyException("Could not commit transaction");
+        }
+        finally{
+            // Reset transaction state.
+            this.isTransaction = false;
         }
     }
 
     @Override
     public void cancel() throws DBProxyException {
         // TEST
-        try {
-            if(this.isClosed()){
-                // Throw error if there is no db connection instance.
-                throw new DBProxyException("No DB connection available.");
-            }
+        if(this.isClosed()){
+            // Throw error if there is no db connection instance.
+            throw new DBProxyException("No DB connection available.");
+        }
 
-            // Reset transactions state.
-            this.isTransaction = false;
+        try {
             // Cancel transaction.
             this.dbConn.rollback();
+            // set auto commit to true;
+            this.dbConn.setAutoCommit(true);
         }
         catch(SQLException ex){
             // Throw error if rollback process fails.
             throw new DBProxyException("Could not cancel transaction.");
+        }
+        finally{
+            // Reset transaction state.
+            this.isTransaction = false;
         }
     }
 
@@ -233,6 +219,10 @@ public class MySqlDBProxy implements IDBProxy{
         catch(SQLException ex){
             // Throw error if closing connection fails.
             throw new DBProxyException("Could not close connection.");
+        }
+        finally{
+            // Deallocate connection instance.
+            this.dbConn = null;
         }
     }
 }
