@@ -9,7 +9,7 @@ import shared.util.ConfigurationManager;
  */
 public class ConfigManagerTest {
     @Test
-    public void testConfigQueries(){
+    public void testDBConfigQueries(){
 
         ConfigurationManager.setConfigurationType(ConfigurationManager.ConfigurationType.TESTING);
 

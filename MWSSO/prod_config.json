@@ -3,7 +3,7 @@
     "service": "mysql",
     "username": "root",
     "password": "",
-    "database": "demodb",
+    "database": "proddb",
     "domain": "localhost",
     "driver": "com.mysql.jdbc.Driver",
     "port": "3306"

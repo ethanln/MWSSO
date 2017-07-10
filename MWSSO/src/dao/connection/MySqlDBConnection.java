@@ -1,6 +1,6 @@
-package dao.proxy;
+package dao.connection;
 
-import exception.DBProxyException;
+import exception.DBConnectionException;
 import shared.util.ConfigurationManager;
 
 import java.sql.*;
@@ -8,7 +8,7 @@ import java.sql.*;
 /**
  * Created by ethan on 6/22/17.
  */
-public class MySqlDBProxy implements IDBProxy{
+public class MySqlDBConnection implements IDBConnection {
 
     /**
      * Connection string.
@@ -27,23 +27,23 @@ public class MySqlDBProxy implements IDBProxy{
 
     /**
      * Constructor.
-     * @throws DBProxyException
+     * @throws DBConnectionException
      */
-    public MySqlDBProxy() throws DBProxyException {
+    public MySqlDBConnection() throws DBConnectionException {
         this.isTransaction = false;
         try {
             this.init();
         }
-        catch(DBProxyException ex){
+        catch(DBConnectionException ex){
             throw ex;
         }
     }
 
     /**
      * Initiates db connection parameters.
-     * @throws DBProxyException
+     * @throws DBConnectionException
      */
-    private void init() throws DBProxyException {
+    private void init() throws DBConnectionException {
         String driver = (String)ConfigurationManager.fetchDbConfiguration("driver");
         String service = (String)ConfigurationManager.fetchDbConfiguration("service");
         String username = (String)ConfigurationManager.fetchDbConfiguration("username");
@@ -58,7 +58,7 @@ public class MySqlDBProxy implements IDBProxy{
             // Build connection string.
             this.connectionString = "jdbc:" + service + "://" + domain + ":" + port + "/" +  database + "?user=" + username + "&password=" + password;
         }
-        catch(DBProxyException ex){
+        catch(DBConnectionException ex){
             throw ex;
         }
     }
@@ -66,9 +66,9 @@ public class MySqlDBProxy implements IDBProxy{
     /**
      * Registers the used db driver.
      * @param driver
-     * @throws DBProxyException
+     * @throws DBConnectionException
      */
-    private void registerDriver(String driver) throws DBProxyException
+    private void registerDriver(String driver) throws DBConnectionException
     {
         try {
             // Register DB driver.
@@ -76,18 +76,22 @@ public class MySqlDBProxy implements IDBProxy{
         }
         catch(ClassNotFoundException ex){
             // throw error if class is not found during reflection process.
-            throw new DBProxyException("Class Not Found - Could not register driver.");
+            throw new DBConnectionException("Class Not Found - Could not register driver.");
         }
         catch(IllegalAccessException ex){
             // throw error if there is illegal access during reflection process.
-            throw new DBProxyException("Illegal Access - Could not register driver.");
+            throw new DBConnectionException("Illegal Access - Could not register driver.");
         }
         catch(InstantiationException ex){
             // Throw error if there is an instantiation problem during the reflection process.
-            throw new DBProxyException("Instantiation - Could not register driver.");
+            throw new DBConnectionException("Instantiation - Could not register driver.");
         }
     }
 
+    /**
+     * Checks to see if db connection is closed.
+     * @return
+     */
     private boolean isClosed(){
         try {
             return this.dbConn == null || this.dbConn.isClosed();
@@ -98,10 +102,9 @@ public class MySqlDBProxy implements IDBProxy{
     }
 
     @Override
-    public void open() throws DBProxyException {
-        // TEST
+    public void open() throws DBConnectionException {
         if(!this.isClosed()){
-            throw new DBProxyException("Connection is already opened.");
+            throw new DBConnectionException("Connection is already opened.");
         }
         try {
             // Create db connection instance.
@@ -112,19 +115,18 @@ public class MySqlDBProxy implements IDBProxy{
             String message = "SQLException: " + ex.getMessage() + "\n" +
                              "SQLState: " + ex.getSQLState() + "\n" +
                              "VendorError: " + ex.getErrorCode();
-            throw new DBProxyException(message);
+            throw new DBConnectionException(message);
         }
     }
 
     @Override
-    public void begin() throws DBProxyException {
-        // TEST
+    public void begin() throws DBConnectionException {
         if(this.isTransaction){
-            throw new DBProxyException("There is already a transaction in progress.");
+            throw new DBConnectionException("There is already a transaction in progress.");
         }
         if (this.isClosed()) {
             // Throw error if there is no db connection instance.
-            throw new DBProxyException("No database connection available.");
+            throw new DBConnectionException("No database connection available.");
         }
 
         try {
@@ -135,42 +137,61 @@ public class MySqlDBProxy implements IDBProxy{
         }
         catch(SQLException ex){
             // Throw error if there is no db connection instance.
-            throw new DBProxyException("No database connection available.");
+            throw new DBConnectionException("No database connection available.");
         }
     }
 
     @Override
-    public ResultSet executeQuery(String query) throws DBProxyException {
-        if(!this.isTransaction){
-            // Throw error if there is current transaction available.
-            throw new DBProxyException("No transaction is currently initiated.");
-        }
-
+    public ResultSet executeQuery(String query) throws DBConnectionException {
         if(this.isClosed()){
             // Throw error if there is no db connection instance.
-            throw new DBProxyException("No DB connection available.");
+            throw new DBConnectionException("No DB connection available.");
         }
 
         try{
+            // Create a statement instance.
             Statement st = this.dbConn.createStatement();
+            // Execute query statement.
             return st.executeQuery(query);
         }
         catch(SQLException ex){
-            throw new DBProxyException("SQL fetching failed.");
+            throw new DBConnectionException("SQL fetching failed.");
         }
     }
 
     @Override
-    public void commit() throws DBProxyException {
-        // TEST
+    public int executeUpdate(String update) throws DBConnectionException{
         if(!this.isTransaction){
             // Throw error if there is current transaction available.
-            throw new DBProxyException("No transaction is currently initiated.");
+            throw new DBConnectionException("No transaction is currently initiated.");
         }
 
         if(this.isClosed()){
             // Throw error if there is no db connection instance.
-            throw new DBProxyException("No DB connection available.");
+            throw new DBConnectionException("No DB connection available.");
+        }
+
+        try{
+            // Create a statement instance.
+            Statement st = this.dbConn.createStatement();
+            // Execute data manipulation process.
+            return st.executeUpdate(update);
+        }
+        catch(SQLException ex){
+            throw new DBConnectionException("SQL update failed.");
+        }
+    }
+
+    @Override
+    public void commit() throws DBConnectionException {
+        if(!this.isTransaction){
+            // Throw error if there is current transaction available.
+            throw new DBConnectionException("No transaction is currently initiated.");
+        }
+
+        if(this.isClosed()){
+            // Throw error if there is no db connection instance.
+            throw new DBConnectionException("No DB connection available.");
         }
 
         try{
@@ -181,7 +202,7 @@ public class MySqlDBProxy implements IDBProxy{
         }
         catch(SQLException ex){
             // Throw error if committing process fails.
-            throw new DBProxyException("Could not commit transaction");
+            throw new DBConnectionException("Could not commit transaction");
         }
         finally{
             // Reset transaction state.
@@ -190,16 +211,15 @@ public class MySqlDBProxy implements IDBProxy{
     }
 
     @Override
-    public void cancel() throws DBProxyException {
-        // TEST
+    public void cancel() throws DBConnectionException {
         if(!this.isTransaction){
             // Throw error if there is current transaction available.
-            throw new DBProxyException("No transaction is currently initiated.");
+            throw new DBConnectionException("No transaction is currently initiated.");
         }
 
         if(this.isClosed()){
             // Throw error if there is no db connection instance.
-            throw new DBProxyException("No DB connection available.");
+            throw new DBConnectionException("No DB connection available.");
         }
 
         try {
@@ -210,7 +230,7 @@ public class MySqlDBProxy implements IDBProxy{
         }
         catch(SQLException ex){
             // Throw error if rollback process fails.
-            throw new DBProxyException("Could not cancel transaction.");
+            throw new DBConnectionException("Could not cancel transaction.");
         }
         finally{
             // Reset transaction state.
@@ -219,8 +239,7 @@ public class MySqlDBProxy implements IDBProxy{
     }
 
     @Override
-    public void close() throws DBProxyException {
-        // TEST
+    public void close() throws DBConnectionException {
         try {
             if(!this.isClosed()) {
                 // Close db connection.
@@ -229,7 +248,7 @@ public class MySqlDBProxy implements IDBProxy{
         }
         catch(SQLException ex){
             // Throw error if closing connection fails.
-            throw new DBProxyException("Could not close connection.");
+            throw new DBConnectionException("Could not close connection.");
         }
         finally{
             // Deallocate connection instance.
