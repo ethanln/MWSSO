@@ -1,6 +1,7 @@
 package dao.connection;
 
 import exception.DBConnectionException;
+import shared.dataset.DataSet;
 
 import java.sql.ResultSet;
 
@@ -22,11 +23,11 @@ public interface IDBConnection {
 
     /**
      * Executes a fetch query and returns raw string data.
-     * @param query
+     * @param queryStatement
      * @return
      * @throws DBConnectionException
      */
-    ResultSet executeQuery(String query) throws DBConnectionException;
+    DataSet executeQuery(String queryStatement) throws DBConnectionException;
 
     /**
      * Executes an sql update the database.

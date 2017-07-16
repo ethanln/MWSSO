@@ -1,6 +1,7 @@
 package dao.connection;
 
 import exception.DBConnectionException;
+import shared.dataset.*;
 import shared.util.ConfigurationManager;
 
 import java.sql.*;
@@ -142,21 +143,67 @@ public class MySqlDBConnection implements IDBConnection {
     }
 
     @Override
-    public ResultSet executeQuery(String query) throws DBConnectionException {
+    public DataSet executeQuery(String queryStatement) throws DBConnectionException {
         if(this.isClosed()){
             // Throw error if there is no db connection instance.
             throw new DBConnectionException("No DB connection available.");
         }
+        DataSet ds = new DataSet();
+        Statement st = null;
+        ResultSet rs = null;
 
-        try{
-            // Create a statement instance.
-            Statement st = this.dbConn.createStatement();
-            // Execute query statement.
-            return st.executeQuery(query);
+        // split the queries into separate iterations.
+        String[] queries = queryStatement.split(";(?=(?:(?:[^\"']*\"[^\"']*\")|(?:[^'\"]*'[^'\"]*'))*[^\"']*$)");
+
+        // Execute each query and store them in a data table.
+        for(String query : queries) {
+            try {
+                // Create a statement instance.
+                st = this.dbConn.createStatement();
+                // Execute query statement.
+                rs = st.executeQuery(query);
+                // Grab row meta data.
+                ResultSetMetaData rowMeta = rs.getMetaData();
+
+                // Get number of columns.
+                int colCount = rowMeta.getColumnCount();
+                // Instantiate the table set.
+                DataTable table = new DataTable();
+
+                // Load table.
+                while (rs.next()) {
+                    DataRow row = new DataRow();
+                    for (int col = 1; col <= colCount; col++) {
+                        // Fetch property of column.
+                        String propertyName = rowMeta.getColumnLabel(col);
+                        // Fetch value of column in row.
+                        String value = rs.getString(col);
+                        row.add(propertyName, value);
+                    }
+                    table.rows.add(row);
+                }
+                ds.tables.add(table);
+            }
+            catch (SQLException ex) {
+                throw new DBConnectionException("SQL fetching failed.");
+            }
+            finally {
+                try {
+                    if(st != null) {
+                        // Close statement instance.
+                        st.close();
+                    }
+                    if(rs != null) {
+                        // Close result set.
+                        rs.close();
+                    }
+                }
+                catch (SQLException ex) {
+                    throw new DBConnectionException("SQL fetching failed.");
+                }
+            }
         }
-        catch(SQLException ex){
-            throw new DBConnectionException("SQL fetching failed.");
-        }
+        return ds;
     }
 
     @Override

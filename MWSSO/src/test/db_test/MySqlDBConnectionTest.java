@@ -4,6 +4,7 @@ import dao.connection.MySqlDBConnection;
 import exception.DBConnectionException;
 import org.junit.Assert;
 import org.junit.Test;
+import shared.dataset.DataSet;
 import shared.util.ConfigurationManager;
 
 import java.sql.Date;
@@ -37,7 +38,7 @@ public class MySqlDBConnectionTest {
 
             // EXECUTE QUERY ON A CLOSED CONNECTION.
             try {
-                ResultSet result = d.executeQuery("SELECT * FROM SSOUser WHERE username = 'test'");
+                DataSet result = d.executeQuery("SELECT * FROM SSOUser WHERE username = 'test'");
             }
             catch(DBConnectionException ex){
                 message = ex.getMessage();
@@ -115,7 +116,7 @@ public class MySqlDBConnectionTest {
     public void testTransactions(){
         ConfigurationManager.setConfigurationType(ConfigurationManager.ConfigurationType.TESTING);
         String message = "";
-        ResultSet rs = null;
+        DataSet ds = null;
         try {
             MySqlDBConnection conn = new MySqlDBConnection();
             String sqlUpdate = "INSERT INTO SSOUser (username, password, email, is_active, date_created)"
@@ -156,15 +157,14 @@ public class MySqlDBConnectionTest {
             // TEST TO SEE IF NEW RECORD PERSISTED.
             String sqlQuery = "SELECT * FROM SSOUser WHERE username = 'al'";
             conn.commit();
-            rs = conn.executeQuery(sqlQuery);
+            ds = conn.executeQuery(sqlQuery);
 
-            while (rs.next()) {
-                Assert.assertEquals("al", rs.getString("username"));
-                Assert.assertEquals("albertson", rs.getString("password"));
-                Assert.assertEquals("al@al.com", rs.getString("email"));
-                Assert.assertEquals(true, rs.getBoolean("is_active"));
-            }
-            rs = null;
+            Assert.assertEquals("al", ds.tables.get(0).rows.get(0).get("username"));
+            Assert.assertEquals("albertson", ds.tables.get(0).rows.get(0).get("password"));
+            Assert.assertEquals("al@al.com", ds.tables.get(0).rows.get(0).get("email"));
+            Assert.assertEquals("1", ds.tables.get(0).rows.get(0).get("is_active"));
+
+            ds = null;
 
             // TRY DELETING USER RECORD WITHOUT TRANSACTION.
             String sqlDelete = "DELETE FROM SSOUser WHERE username = 'al'";
@@ -192,29 +192,24 @@ public class MySqlDBConnectionTest {
             conn.commit();
 
             // TRY QUERYING NON-EXISTENT RECORD
-            rs = conn.executeQuery(sqlQuery);
-            Assert.assertEquals(false, rs.next());
+            ds = conn.executeQuery(sqlQuery);
+            Assert.assertEquals(0, ds.tables.get(0).rows.size());
 
             // INSERT USER RECORD WITH A CANCEL OPERATION.
             conn.begin();
             rowsAffected = conn.executeUpdate(sqlUpdate);
             Assert.assertEquals(1, rowsAffected);
             conn.cancel();
-            rs = conn.executeQuery(sqlQuery);
-            Assert.assertEquals(false, rs.next());
+            ds = conn.executeQuery(sqlQuery);
+            Assert.assertEquals(0, ds.tables.get(0).rows.size());
 
             // TEST QUERYING MULTIPLE TABLES
-            try {
-                String multQuery = "SELECT * FROM SSOUser WHERE username = 'al'; SELECT * FROM SSOUserPermission;";
-                rs = conn.executeQuery(multQuery);
-            }
-            catch(DBConnectionException ex){
-                message = ex.getMessage();
-            }
-            finally{
-                Assert.assertEquals("SQL fetching failed.", message);
-                message = "";
-            }
+            String multQuery = "SELECT * FROM SSOUser WHERE username = 'al'; SELECT * FROM SSOUserPermission;";
+            ds = conn.executeQuery(multQuery);
+            Assert.assertEquals(0, ds.tables.get(0).rows.size());
+            Assert.assertEquals("1", ds.tables.get(1).rows.get(0).get("id"));
+            Assert.assertEquals("1", ds.tables.get(1).rows.get(0).get("sso_user_id"));
+            Assert.assertEquals("1", ds.tables.get(1).rows.get(0).get("sso_group_permission_id"));
 
             // TEST APPLYING MANIPULATION SCRIPT TO FETCH OPERATION
             try {
@@ -230,9 +225,6 @@ public class MySqlDBConnectionTest {
             conn.close();
         }
         catch(DBConnectionException ex){
-            Assert.assertEquals(0, 1);
-        }
-        catch(SQLException ex){
             Assert.assertEquals(0, 1);
         }
     }
