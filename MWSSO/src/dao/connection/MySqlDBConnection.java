@@ -199,7 +199,7 @@ public class MySqlDBConnection implements IDBConnection {
                     }
                 }
                 catch (SQLException ex) {
-                    throw new DBConnectionException("SQL fetching failed.");
+                    throw new DBConnectionException("Could not close statement.");
                 }
             }
         }
@@ -217,15 +217,25 @@ public class MySqlDBConnection implements IDBConnection {
             // Throw error if there is no db connection instance.
             throw new DBConnectionException("No DB connection available.");
         }
-
+        Statement st = null;
         try{
             // Create a statement instance.
-            Statement st = this.dbConn.createStatement();
+            st = this.dbConn.createStatement();
             // Execute data manipulation process.
             return st.executeUpdate(update);
         }
         catch(SQLException ex){
             throw new DBConnectionException("SQL update failed.");
+        }
+        finally{
+            try {
+                if (st != null) {
+                    st.close();
+                }
+            }
+            catch(SQLException ex){
+                throw new DBConnectionException("Could not close statement.");
+            }
         }
     }
 
