@@ -20,6 +20,10 @@ public class SSOUserRegistrationRequest {
      */
     public String password;
     /**
+     * SSO user registration token.
+     */
+    public String token;
+    /**
      * SSO user registration email.
      */
     public String email;
@@ -41,10 +45,11 @@ public class SSOUserRegistrationRequest {
      * @param _isAccepted
      * @param _dateCreated
      */
-    public SSOUserRegistrationRequest(int _id, String _username, String _password, String _email, boolean _isAccepted, Date _dateCreated){
+    public SSOUserRegistrationRequest(int _id, String _username, String _password, String _token, String _email, boolean _isAccepted, Date _dateCreated){
         this.id = _id;
         this.username = _username;
         this.password = _password;
+        this.token = _token;
         this.email = _email;
         this.isAccepted = _isAccepted;
         this.dateCreated = _dateCreated;
@@ -57,6 +62,7 @@ public class SSOUserRegistrationRequest {
         this.id = -1;
         this.username = null;
         this.password = null;
+        this.token = null;
         this.email = null;
         this.isAccepted = false;
         this.dateCreated = new Date(Calendar.getInstance().getTime().getTime());
