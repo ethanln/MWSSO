@@ -96,6 +96,28 @@ public class ConfigurationManager {
     }
 
     /**
+     * Fetches any setting strictly related to the dao dependency configuration.
+     * @param query
+     * @return
+     */
+    private Object _fetchDaoDependencyConfiguration(String query){
+        try{
+            // Execute query and return result as a generic object type.
+            query = query == null ? "" : query;
+            String accessor = query != null && !query.equals("") ? "." : "";
+            return JsonPath.read(this.config, "$.dao_dependencies_config" + accessor + query);
+        }
+        catch(Exception e){
+            // return null if an error occurs.
+            return null;
+        }
+    }
+
+    public static Object fetchDaoDependencyConfiguration(String query){
+        return getInstance()._fetchDaoDependencyConfiguration(query);
+    }
+
+    /**
      * Sets the configuration type and its file source.
      * @param type
      */

@@ -1,8 +1,11 @@
 package test.util_test;
 
+import com.google.gson.internal.LinkedTreeMap;
 import org.junit.*;
 import org.junit.Assert;
 import shared.util.ConfigurationManager;
+
+import java.util.ArrayList;
 
 /**
  * Created by ethan on 6/18/17.
@@ -32,6 +35,19 @@ public class ConfigManagerTest {
         Assert.assertEquals(result, "3306");
 
         result = (String)ConfigurationManager.fetchDbConfiguration("port.whoKnows");
+        Assert.assertEquals(result, null);
+
+        result = (String)ConfigurationManager.fetchDaoDependencyConfiguration("SSOSessionTokenDao[0].property_name");
+        Assert.assertEquals(result, "ssoUserDao");
+
+        ArrayList<LinkedTreeMap> dependencies = (ArrayList<LinkedTreeMap>)ConfigurationManager.fetchDaoDependencyConfiguration("SSOSessionTokenDao");
+        result = dependencies.get(0).get("class_name").toString();
+        Assert.assertEquals(result, "SSOUserDao");
+
+        result = dependencies.get(1).get("property_name").toString();
+        Assert.assertEquals(result, "ssoUserPermissionDao");
+
+        result = (String)ConfigurationManager.fetchDaoDependencyConfiguration("SSOSessionTokenDao[0].whoKnows");
         Assert.assertEquals(result, null);
     }
 }

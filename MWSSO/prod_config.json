@@ -7,5 +7,25 @@
     "domain": "localhost",
     "driver": "com.mysql.jdbc.Driver",
     "port": "3306"
+  },
+  "dao_dependencies_config": {
+    "SSOGroupPermissionDao": [
+
+    ],
+    "SSOSessionTokenDao": [
+      {
+        "property_name": "ssoUserDao",
+        "class_name": "SSOUserDao"
+      }
+    ],
+    "SSOUserDao": [
+
+    ],
+    "SSOUserPermissionDao": [
+
+    ],
+    "SSOUserRegistrationRequestDao": [
+
+    ]
   }
 }

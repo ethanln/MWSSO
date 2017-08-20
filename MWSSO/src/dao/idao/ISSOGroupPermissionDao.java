@@ -1,5 +1,6 @@
 package dao.idao;
 
+import exception.DaoException;
 import shared.model.SSOGroupPermission;
 
 import java.util.List;
@@ -14,30 +15,30 @@ public interface ISSOGroupPermissionDao {
      * @param id
      * @return
      */
-    SSOGroupPermission get(int id);
+    SSOGroupPermission get(int id) throws DaoException;
 
     /**
      * Fetches SSO group permission instnace from database by name.
      * @param name
      * @return
      */
-    SSOGroupPermission getByName(String name);
+    SSOGroupPermission getByName(String name) throws DaoException;
 
     /**
      * Fetches all SSO group permission instances from database.
      * @return
      */
-    List<SSOGroupPermission> getAll();
+    List<SSOGroupPermission> getAll() throws DaoException;
 
     /**
      * Updates SSO group permission record in database.
      * @param ssoGroupPermission
      */
-    void update(SSOGroupPermission ssoGroupPermission);
+    void update(SSOGroupPermission ssoGroupPermission) throws DaoException;
 
     /**
      * Deletes SSO group permission record from database.
      * @param id
      */
-    void delete(int id);
+    void delete(int id) throws DaoException;
 }

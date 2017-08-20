@@ -1,5 +1,6 @@
 package dao.idao;
 
+import exception.DaoException;
 import shared.model.SSOUserRegistrationRequest;
 
 import java.util.List;
@@ -13,30 +14,30 @@ public interface ISSOUserRegistrationRequestDao {
      * @param id
      * @return
      */
-    SSOUserRegistrationRequest get(int id);
+    SSOUserRegistrationRequest get(int id) throws DaoException;
 
     /**
      * Fetches SSO user registration request instance from database by token.
      * @param token
      * @return
      */
-    SSOUserRegistrationRequest getByToken(String token);
+    SSOUserRegistrationRequest getByToken(String token) throws DaoException;
 
     /**
      * Fetches all SSO user registration request instances from database.
      * @return
      */
-    List<SSOUserRegistrationRequest> getAll();
+    List<SSOUserRegistrationRequest> getAll() throws DaoException;
 
     /**
      * Updates SSO user registration request record in database.
      * @param ssoUserRegistrationRequest
      */
-    void update(SSOUserRegistrationRequest  ssoUserRegistrationRequest);
+    void update(SSOUserRegistrationRequest  ssoUserRegistrationRequest) throws DaoException;
 
     /**
      * Deletes SSO user registration request record from database.
      * @param id
      */
-    void delete(int id);
+    void delete(int id) throws DaoException;
 }
