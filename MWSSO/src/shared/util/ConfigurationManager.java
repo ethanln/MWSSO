@@ -131,6 +131,22 @@ public class ConfigurationManager {
         this.setupConfiguration();
     }
 
+    private Object _fetchDaoSetRegistryConfiguration(String query) {
+        try{
+            query = query == null ? "" : query;
+            String accessor = query != null  && !query.equals("") ? "." : "";
+            return JsonPath.read(this.config, "$.dao_set_registry" + accessor + query);
+        }
+        catch(Exception e) {
+            return null;
+        }
+    }
+
+    public static Object fetchDaoSetRegistryConfiguration(String query){
+        return getInstance()._fetchDaoSetRegistryConfiguration(query);
+    }
+
+
     public static void setConfigurationType(ConfigurationType type){
         getInstance()._setConfigurationType(type);
     }

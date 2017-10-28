@@ -7,7 +7,8 @@ public class TestRunner {
     public static void main(String args[]){
         String[] testClassesServer = new String[] {
             "test.util_test.ConfigManagerTest",
-            "test.db_test.MySqlDBConnectionTest"
+            "test.db_test.MySqlDBConnectionTest",
+            "test.dao_test.DaoFactoryTest"
         };
         org.junit.runner.JUnitCore.main(testClassesServer);
     }

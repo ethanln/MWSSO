@@ -1,6 +1,6 @@
 package test.db_test;
 
-import dao.connection.MySqlDBConnection;
+import dao.plugins.sql.connection.MySqlDBConnection;
 import exception.DBConnectionException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,8 +8,6 @@ import shared.dataset.DataSet;
 import shared.util.ConfigurationManager;
 
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Calendar;
 
 /**
@@ -31,7 +29,7 @@ public class MySqlDBConnectionTest {
                 message = ex.getMessage();
             }
             finally{
-                Assert.assertEquals("No database connection available.", message);
+                Assert.assertEquals("No database iconnection available.", message);
                 message = "";
                 d.close();
             }
@@ -44,7 +42,7 @@ public class MySqlDBConnectionTest {
                 message = ex.getMessage();
             }
             finally{
-                Assert.assertEquals("No DB connection available.", message);
+                Assert.assertEquals("No DB iconnection available.", message);
                 message = "";
                 d.close();
             }

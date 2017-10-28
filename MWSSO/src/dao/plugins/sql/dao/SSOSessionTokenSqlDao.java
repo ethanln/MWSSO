@@ -1,5 +1,6 @@
-package dao;
+package dao.plugins.sql.dao;
 
+import dao.Dao;
 import dao.idao.ISSOSessionTokenDao;
 import dao.idao.ISSOUserDao;
 import exception.DaoException;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Created by ethan on 8/20/17.
  */
-public class SSOSessionTokenDao extends Dao implements ISSOSessionTokenDao {
+public class SSOSessionTokenSqlDao extends Dao implements ISSOSessionTokenDao {
 
     private ISSOUserDao ssoUserDao;
 
@@ -18,7 +19,7 @@ public class SSOSessionTokenDao extends Dao implements ISSOSessionTokenDao {
      * Constructor.
      * @throws DaoException
      */
-    public SSOSessionTokenDao() throws DaoException {
+    public SSOSessionTokenSqlDao() throws DaoException {
         // TEST TO MAKE SURE THAT THE PARENT CONSTRUCTOR IS BEING INVOKED.
     }
 

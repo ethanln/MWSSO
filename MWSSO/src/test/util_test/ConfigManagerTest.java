@@ -49,5 +49,8 @@ public class ConfigManagerTest {
 
         result = (String)ConfigurationManager.fetchDaoDependencyConfiguration("SSOSessionTokenDao[0].whoKnows");
         Assert.assertEquals(result, null);
+
+        result = (String)ConfigurationManager.fetchDaoSetRegistryConfiguration("registry");
+        Assert.assertEquals(result, "sql");
     }
 }

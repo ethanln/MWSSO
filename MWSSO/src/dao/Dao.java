@@ -1,7 +1,7 @@
 package dao;
 
-import dao.connection.IDBConnection;
-import dao.connection.MySqlDBConnection;
+import dao.iconnection.IDBConnection;
+import dao.plugins.sql.connection.MySqlDBConnection;
 import exception.DBConnectionException;
 import exception.DaoException;
 import shared.util.ConfigurationManager;
@@ -12,7 +12,7 @@ import shared.util.ConfigurationManager;
 public abstract class Dao {
 
     /**
-     * DB connection instance.
+     * DB iconnection instance.
      */
     protected IDBConnection dbConnection;
 
@@ -27,7 +27,7 @@ public abstract class Dao {
     }
 
     /**
-     * Instantiates the DB connection reference.
+     * Instantiates the DB iconnection reference.
      * @param dbService
      * @throws DaoException
      */

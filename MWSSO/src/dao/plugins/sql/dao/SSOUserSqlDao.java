@@ -1,5 +1,6 @@
-package dao;
+package dao.plugins.sql.dao;
 
+import dao.Dao;
 import dao.idao.ISSOUserDao;
 import exception.DaoException;
 import shared.model.SSOUser;
@@ -9,12 +10,12 @@ import java.util.List;
 /**
  * Created by ethan on 8/20/17.
  */
-public class SSOUserDao extends Dao implements ISSOUserDao {
+public class SSOUserSqlDao extends Dao implements ISSOUserDao {
 
     /**
      * Constructor.
      */
-    public SSOUserDao() throws DaoException{
+    public SSOUserSqlDao() throws DaoException{
         // TEST TO MAKE SURE THAT THE PARENT CONSTRUCTOR IS BEING INVOKED.
     }
 

@@ -1,5 +1,6 @@
-package dao.connection;
+package dao.plugins.sql.connection;
 
+import dao.iconnection.IDBConnection;
 import exception.DBConnectionException;
 import shared.dataset.*;
 import shared.util.ConfigurationManager;
@@ -41,7 +42,7 @@ public class MySqlDBConnection implements IDBConnection {
     }
 
     /**
-     * Initiates db connection parameters.
+     * Initiates db iconnection parameters.
      * @throws DBConnectionException
      */
     private void init() throws DBConnectionException {
@@ -56,7 +57,7 @@ public class MySqlDBConnection implements IDBConnection {
         try {
             // Register driver.
             this.registerDriver(driver);
-            // Build connection string.
+            // Build iconnection string.
             this.connectionString = "jdbc:" + service + "://" + domain + ":" + port + "/" +  database + "?user=" + username + "&password=" + password;
         }
         catch(DBConnectionException ex){
@@ -90,7 +91,7 @@ public class MySqlDBConnection implements IDBConnection {
     }
 
     /**
-     * Checks to see if db connection is closed.
+     * Checks to see if db iconnection is closed.
      * @return
      */
     private boolean isClosed(){
@@ -108,11 +109,11 @@ public class MySqlDBConnection implements IDBConnection {
             throw new DBConnectionException("Connection is already opened.");
         }
         try {
-            // Create db connection instance.
+            // Create db iconnection instance.
             this.dbConn = DriverManager.getConnection(this.connectionString);
         }
         catch(SQLException ex){
-            // Throw db connection error if connection fails.
+            // Throw db iconnection error if iconnection fails.
             String message = "SQLException: " + ex.getMessage() + "\n" +
                              "SQLState: " + ex.getSQLState() + "\n" +
                              "VendorError: " + ex.getErrorCode();
@@ -126,8 +127,8 @@ public class MySqlDBConnection implements IDBConnection {
             throw new DBConnectionException("There is already a transaction in progress.");
         }
         if (this.isClosed()) {
-            // Throw error if there is no db connection instance.
-            throw new DBConnectionException("No database connection available.");
+            // Throw error if there is no db iconnection instance.
+            throw new DBConnectionException("No database iconnection available.");
         }
 
         try {
@@ -137,16 +138,16 @@ public class MySqlDBConnection implements IDBConnection {
             this.isTransaction = true;
         }
         catch(SQLException ex){
-            // Throw error if there is no db connection instance.
-            throw new DBConnectionException("No database connection available.");
+            // Throw error if there is no db iconnection instance.
+            throw new DBConnectionException("No database iconnection available.");
         }
     }
 
     @Override
     public DataSet executeQuery(String queryStatement) throws DBConnectionException {
         if(this.isClosed()){
-            // Throw error if there is no db connection instance.
-            throw new DBConnectionException("No DB connection available.");
+            // Throw error if there is no db iconnection instance.
+            throw new DBConnectionException("No DB iconnection available.");
         }
         DataSet ds = new DataSet();
         Statement st = null;
@@ -214,8 +215,8 @@ public class MySqlDBConnection implements IDBConnection {
         }
 
         if(this.isClosed()){
-            // Throw error if there is no db connection instance.
-            throw new DBConnectionException("No DB connection available.");
+            // Throw error if there is no db iconnection instance.
+            throw new DBConnectionException("No DB iconnection available.");
         }
         Statement st = null;
         try{
@@ -247,8 +248,8 @@ public class MySqlDBConnection implements IDBConnection {
         }
 
         if(this.isClosed()){
-            // Throw error if there is no db connection instance.
-            throw new DBConnectionException("No DB connection available.");
+            // Throw error if there is no db iconnection instance.
+            throw new DBConnectionException("No DB iconnection available.");
         }
 
         try{
@@ -275,8 +276,8 @@ public class MySqlDBConnection implements IDBConnection {
         }
 
         if(this.isClosed()){
-            // Throw error if there is no db connection instance.
-            throw new DBConnectionException("No DB connection available.");
+            // Throw error if there is no db iconnection instance.
+            throw new DBConnectionException("No DB iconnection available.");
         }
 
         try {
@@ -299,16 +300,16 @@ public class MySqlDBConnection implements IDBConnection {
     public void close() throws DBConnectionException {
         try {
             if(!this.isClosed()) {
-                // Close db connection.
+                // Close db iconnection.
                 this.dbConn.close();
             }
         }
         catch(SQLException ex){
-            // Throw error if closing connection fails.
-            throw new DBConnectionException("Could not close connection.");
+            // Throw error if closing iconnection fails.
+            throw new DBConnectionException("Could not close iconnection.");
         }
         finally{
-            // Deallocate connection instance.
+            // Deallocate iconnection instance.
             this.dbConn = null;
             // Make sure the transaction state is always false.
             this.isTransaction = false;

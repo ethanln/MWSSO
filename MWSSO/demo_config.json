@@ -13,10 +13,7 @@
 
     ],
     "SSOSessionTokenDao": [
-      {
-        "property_name": "ssoUserDao",
-        "class_name": "SSOUserDao"
-      }
+
     ],
     "SSOUserDao": [
 
@@ -26,6 +23,14 @@
     ],
     "SSOUserRegistrationRequestDao": [
 
+    ]
+  },
+  "dao_set_registry":{
+    "registry": "sql",
+    "registries": [
+      {
+        "sql": "dao.sql_dao.factory.SqlDaoFactory"
+      }
     ]
   }
 }

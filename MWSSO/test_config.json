@@ -34,5 +34,14 @@
         "class_name": "SSOGroupPermissionDao"
       }
     ]
+  },
+  "dao_set_registry":{
+    "registry": "sql",
+    "registries": [
+      {
+        "sql": "dao.sql_dao.factory.SqlDaoFactory",
+        "mango": "not.yet.available"
+      }
+    ]
   }
 }

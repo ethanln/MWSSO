@@ -1,16 +1,14 @@
-package dao.connection;
+package dao.iconnection;
 
 import exception.DBConnectionException;
 import shared.dataset.DataSet;
-
-import java.sql.ResultSet;
 
 /**
  * Created by ethan on 6/24/17.
  */
 public interface IDBConnection {
     /**
-     * Opens a connection to a db server.
+     * Opens a iconnection to a db server.
      * @throws DBConnectionException
      */
     void open() throws DBConnectionException;
@@ -50,7 +48,7 @@ public interface IDBConnection {
     void cancel() throws DBConnectionException;
 
     /**
-     * Closes connection to db server.
+     * Closes iconnection to db server.
      * @throws DBConnectionException
      */
     void close() throws DBConnectionException;

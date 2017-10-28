@@ -1,5 +1,6 @@
-package dao;
+package dao.plugins.sql.dao;
 
+import dao.Dao;
 import dao.idao.ISSOGroupPermissionDao;
 import exception.DaoException;
 import shared.model.SSOGroupPermission;
@@ -9,12 +10,12 @@ import java.util.List;
 /**
  * Created by ethan on 8/20/17.
  */
-public class SSOGroupPermissionDao extends Dao implements ISSOGroupPermissionDao{
+public class SSOGroupPermissionSqlDao extends Dao implements ISSOGroupPermissionDao{
 
     /**
      * Constructor.
      */
-    public SSOGroupPermissionDao() throws DaoException{
+    public SSOGroupPermissionSqlDao() throws DaoException{
         // TEST TO MAKE SURE THAT THE PARENT CONSTRUCTOR IS BEING INVOKED.
     }
 

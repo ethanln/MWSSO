@@ -1,5 +1,6 @@
-package dao;
+package dao.plugins.sql.dao;
 
+import dao.Dao;
 import dao.idao.ISSOUserPermissionDao;
 import exception.DaoException;
 import shared.model.SSOUserPermission;
@@ -9,13 +10,13 @@ import java.util.List;
 /**
  * Created by ethan on 8/20/17.
  */
-public class SSOUserPermissionDao extends Dao implements ISSOUserPermissionDao {
+public class SSOUserPermissionSqlDao extends Dao implements ISSOUserPermissionDao {
 
     /**
      * Constructor.
      * @throws DaoException
      */
-    public SSOUserPermissionDao() throws DaoException {
+    public SSOUserPermissionSqlDao() throws DaoException {
 
     }
 
